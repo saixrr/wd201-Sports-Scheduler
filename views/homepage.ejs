@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Sports Scheduler</title>
+</head>
+<body>
+  <h1>Welcome to Sports Scheduler</h1>
+  
+  <% if (sports && sports.length > 0) { %>
+    <h2>Sports List:</h2>
+    <ul>
+      <% sports.forEach(function(sport) { %>
+        <li><%= sport.name %></li>
+      <% }); %>
+    </ul>
+  <% } else { %>
+    <p>No sports available.</p>
+  <% } %>
+
+  <h2>Create a new sport:</h2>
+  <form action="/sports/create" method="post">
+    <label for="sportName">Sport Name:</label>
+    <input type="text" id="sportName" name="sportName" required>
+    <button type="submit">Create</button>
+  </form>
+</body>
+</html>

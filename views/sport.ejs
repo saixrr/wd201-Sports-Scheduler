@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <title>My Sports SCHEDULER</title>
+</head>
+<body>
+<main>
+    <div class="intro">
+        <h1>Sports</h1>
+    </div>
+    <div class="sports">
+        <% if(sports.length === 0){ %>
+            <h1 class="no-sports">No sports found</h1>
+        <% }else{ %>
+            <% for(let i = 0;i < sports.length;i++){ %>
+                <a href="/sports/<%= sports[i].id %>">
+                    <div class="sport">
+                        <h2><%= sports[i].name %></h2>
+                    </div>
+
+                </a>
+        <% }} %>
+    </div>
+</main>
+</body>
+</html>
