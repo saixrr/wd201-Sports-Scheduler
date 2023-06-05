@@ -4,22 +4,24 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <title>My Sports SCHEDULER</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body>
-<main>
-    <div class="intro">
-        <h1>Sports</h1>
+<main class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Available Sports</h1>
     </div>
-    <div class="sports">
+    <div class="text-right mb-4">
+        <a href="/signout" class="text-green-600">Sign-out</a>
+    </div>
+    <div class="flex flex-col items-center">
         <% if(sports.length === 0){ %>
-            <h1 class="no-sports">No sports found</h1>
+            <h1 class="text-2xl font-bold text-gray-900">No sports found</h1>
         <% }else{ %>
-            <% for(let i = 0;i < sports.length;i++){ %>
-                <a href="/sports/<%= sports[i].id %>">
-                    <div class="sport">
-                        <h2><%= sports[i].name %></h2>
-                    </div>
-
+            <% const uniqueSports = Array.from(new Set(sports.map(sport => sport.name))); %>
+            <% for(let i = 0;i < uniqueSports.length;i++){ %>
+                <a href="/sports/<%= uniqueSports[i] %>" class="w-40 h-8 bg-white rounded-lg shadow-md mb-6 flex items-center justify-center transition-transform hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+                    <h2 class="text-lg font-Semi-bold text-blue-800"><%= uniqueSports[i] %></h2>
                 </a>
         <% }} %>
     </div>
