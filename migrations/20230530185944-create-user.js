@@ -11,7 +11,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       admin: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
       },
       firstName: {
         type: Sequelize.STRING
