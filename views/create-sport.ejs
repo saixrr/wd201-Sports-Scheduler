@@ -3,11 +3,17 @@
 <head>
   <title>Create Sport</title>
   <link rel="stylesheet" href="/css/style.css" />
+  <meta name="csrf-token" content="<%= csrfToken %>" />
   <style>
     .delete-symbol {
       color: red;
       cursor: pointer;
       margin-left: 10px;
+    }
+    .available-sports-link {
+      display: block;
+      text-align: right;
+      margin-bottom: 10px;
     }
   </style>
 </head>
@@ -15,6 +21,7 @@
   <h1>Create Sport</h1>
   <a href="/signout" class="text-green-600">Sign-out</a>
   <form action="/create-session" method="POST">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <label for="sportName">Sport Name:</label>
     <input type="text" id="sportName" name="sportName" required>
     <button type="submit">Submit</button>
@@ -32,6 +39,7 @@
         </li>
       <% }) %>
     </ul>
+    <a href="/sports" class="available-sports-link">View All Sports</a>
   <% } else { %>
     <p>You have not created any sports yet.</p>
   <% } %>
