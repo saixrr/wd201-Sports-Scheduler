@@ -2,9 +2,9 @@
 /* eslint-disable no-undef */
 const flash = require("connect-flash");
 const express = require('express');
+var csrf = require("tiny-csrf");
 const app = express();
 const { Sport,User,Session } = require("./models");
-// var csrf = require("tiny-csrf")
 const path = require('path');
 const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
@@ -21,7 +21,7 @@ const saltRounds=10;
 const moment = require("moment");
 const { where } = require("sequelize");
 app.use(cookieParser("shh!some secret string"));
-// app.use(csrf("this_should_be_32_character_long",["POST","PUT","DELETE"]));
+app.use(csrf("this_should_be_32_character_long",["POST","PUT","DELETE"]));
 
 
 app.set('views', path.join(__dirname, '/views'));
@@ -88,16 +88,16 @@ passport.use(new LocalStartegy({
     }) ; 
 
 app.get('/', (req, res) => {
-    res.render("dashboard.ejs")
+    res.render("dashboard.ejs",{csrfToken: req.csrfToken()})
   });
 
   app.get("/signup", (req, res) => {
-    res.render("signup.ejs", { title: "Signup" });
+    res.render("signup.ejs", { title: "Signup",csrfToken: req.csrfToken(),});
   });
   
 
   app.get("/login",(request,response)=>{
-    response.render("login.ejs",{title:"Signin" })
+    response.render("login.ejs",{title:"Signin",csrfToken: request.csrfToken(), })
   })
   app.get("/signout",(request,response)=>{
     request.logout((err)=> {
@@ -111,7 +111,7 @@ app.get('/', (req, res) => {
     try {
       const userId = req.user.id;
       const sports = await Sport.findAll({ where: { userId } });
-      res.render('create-sport.ejs', { sports });
+      res.render('create-sport.ejs', { sports,csrfToken: req.csrfToken(), });
     } catch (error) {
       console.log(error);
       res.status(404).send("Error retrieving sports");
@@ -137,7 +137,7 @@ app.get("/newsession/:sportId/:sportName", (req, res) => {
   console.log(sportId)
   const sportName = req.params.sportName;
   console.log(sportName)
-  res.render("sport-details.ejs", { sportId,sportName });
+  res.render("sport-details.ejs", { sportId,sportName,csrfToken: req.csrfToken(), });
 });
 
 app.post("/newsession", async (req, res) => { 
@@ -148,12 +148,6 @@ app.post("/newsession", async (req, res) => {
   const { venue, time, playerCount,membersList,remaining } = req.body;
   const date=req.body.date;
   console.log(req.userId)
-  // try {
-  //   const sport = await Sport.findOne({ where: { id:sportId } });
-  //   console.log(sport.id)
-  //   if (!sport) {
-  //     throw new Error('Sport not found');
-  //   }
   try{
     const session = await Session.createNewSession(req.userId, {
       venue,
@@ -177,7 +171,7 @@ app.get("/session/:sessionid", async (req, res) => {
     if (!session) {
       throw new Error('Session not found');
     }
-    res.render("session-details.ejs", { session });
+    res.render("session-details.ejs", { session,});
   } catch (error) {
     console.log(error);
     res.status(404).send("Error retrieving session details");
@@ -205,7 +199,6 @@ app.get("/session/:sessionid", async (req, res) => {
       console.log(hashedPwd)
       try{
         const user=await User.create({
-          admin:false,
           firstName:request.body.firstName,
           lastName:request.body.lastName,
           email:request.body.email,
@@ -240,7 +233,7 @@ app.get("/session/:sessionid", async (req, res) => {
 
     app.get('/sessions', connectEnsureLogin.ensureLoggedIn(), (req, res) => {
       console.log(req.user.id)
-      res.render('sessions.ejs', { userId: req.user.id });
+      res.render('sessions.ejs', { userId: req.user.id, });
     });
     
 
@@ -249,7 +242,7 @@ app.get("/sessions/:sessionid", async (req, res) => {
   const sessionId = req.params.id;
   const session = await Session.getSessionById(sessionId);
   res.render("session-details.ejs", {
-    session: session
+    session: session,
   });
 });
 
@@ -259,7 +252,7 @@ app.get("/sessions/:sessionid", async (req, res) => {
     app.get("/admin",connectEnsureLogin.ensureLoggedIn(),(req,res)=>{
       const userId = req.query.userId;
       console.log(userId)
-      res.render("admin.ejs")
+      res.render("admin.ejs",)
     })
 
    app.get("/sports/:sportName",connectEnsureLogin.ensureLoggedIn(),async (req,res)=>{
@@ -269,7 +262,7 @@ app.get("/sessions/:sessionid", async (req, res) => {
     }
     })
     console.log(sessions)
-    res.render("sportsessions.ejs",{sessions})
+    res.render("sportsessions.ejs",{sessions,})
    })
 
     
@@ -291,7 +284,7 @@ app.get('/delete-sport', async (req, res) => {
     }
     await sport.destroy();
 
-    res.redirect('/create-session');
+    res.redirect('/create-session',);
   } catch (error) {
     console.error('Error deleting sport:', error);
     res.status(500).send('An error occurred while deleting the sport');
