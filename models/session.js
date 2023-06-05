@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       Session.belongsTo(models.User, { foreignKey: 'creatorId' });
       Session.belongsTo(models.Sport, { foreignKey: 'sportId' });
     }
-    static createNewSession(userId, body, sportId) {
+    static createNewSession(userId, body, sportId,sportName) {
       const { date, time, membersList, venue,count,remaining } = body;
     
       const [year, month, day] = date.split('-').map(Number);
@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       const newMembersList = filteredMembersList.map((item) => item.trim());
 
       console.log(newMembersList)
-    
+      console.log(sportName)
       const session = {
         creatorId:userId,
         sportId: sportId,
@@ -33,7 +33,8 @@ module.exports = (sequelize, DataTypes) => {
         time:time,
         venue:venue,
         count:count,
-        remaining:remaining
+        remaining:remaining,
+        sportName:sportName,
       };
     
       return this.create(session);
@@ -279,6 +280,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       reason: {
         type: DataTypes.STRING
+      },
+      sportName:{
+        type:DataTypes.STRING
       }
     },
     {
