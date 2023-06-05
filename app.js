@@ -205,6 +205,7 @@ app.get("/session/:sessionid", async (req, res) => {
       console.log(hashedPwd)
       try{
         const user=await User.create({
+          admin:false,
           firstName:request.body.firstName,
           lastName:request.body.lastName,
           email:request.body.email,
