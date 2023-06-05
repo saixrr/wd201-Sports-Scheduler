@@ -19,6 +19,7 @@ const { request } = require("http");
 const { user } = require("pg/lib/defaults");
 const saltRounds=10;
 const moment = require("moment");
+const { where } = require("sequelize");
 app.use(cookieParser("shh!some secret string"));
 // app.use(csrf("this_should_be_32_character_long",["POST","PUT","DELETE"]));
 
@@ -119,46 +120,52 @@ app.get('/', (req, res) => {
   
 
 app.post("/create-session", async (req, res) => {
-  const name=req.body.sportName;
+  const sportName=req.body.sportName;
+  console.log(sportName);
   const userId=req.userId;
   console.log(userId)
   try {
-    const sport = await Sport.createNewSport(userId,name);
+    const sport = await Sport.createNewSport(userId,sportName);
     res.redirect("/create-session");
   } catch (error) {
     console.log(error);
     res.status(404).send("Sport not found");
   }
 });
-app.get("/newsession", (req, res) => {
-  const sportId = req.query.sportId;
-  const sportName = req.body.sportName;
+app.get("/newsession/:sportId/:sportName", (req, res) => {
+  const sportId = req.params.sportId;
+  console.log(sportId)
+  const sportName = req.params.sportName;
+  console.log(sportName)
   res.render("sport-details.ejs", { sportId,sportName });
 });
 
-app.post("/newsession", async (req, res) => {
-  const sportId = req.query.sport;
-  console.log(sportId)
+app.post("/newsession", async (req, res) => { 
+  const sportId = req.body.sportId;
+  console.log(sportId);
+  sportName=req.body.sportName;
+  console.log(sportName);
   const { venue, time, playerCount,membersList,remaining } = req.body;
   const date=req.body.date;
-  try {
-    const sport = await Sport.findOne({ where: { id:sportId } });
-    console.log(sport.id)
-    if (!sport) {
-      throw new Error('Sport not found');
-    }
-
+  console.log(req.userId)
+  // try {
+  //   const sport = await Sport.findOne({ where: { id:sportId } });
+  //   console.log(sport.id)
+  //   if (!sport) {
+  //     throw new Error('Sport not found');
+  //   }
+  try{
     const session = await Session.createNewSession(req.userId, {
       venue,
       date: date,
       time: time, 
       membersList:membersList,
       count: playerCount,
-      remaining,
-    }, sport.id);
+      remaining
+    }, Number(sportId), sportName);
     console.log(session.id)
     res.redirect("/session/"+session.id);
-  } catch (error) {
+  }catch (error) {
     console.log(error);
     res.status(404).send("Error creating session");
   }
@@ -254,20 +261,20 @@ app.get("/sessions/:sessionid", async (req, res) => {
       res.render("admin.ejs")
     })
 
-   app.get("/sports/:id",connectEnsureLogin.ensureLoggedIn(),(req,res)=>{
-    const sportId=req.body.id;
-    console.log(sportId);
-    const playerCount = 3;
-    res.render("sport-details.ejs",{
-      sportId:sportId,
-      playerCount:playerCount,
+   app.get("/sports/:sportName",connectEnsureLogin.ensureLoggedIn(),async (req,res)=>{
+    const name=req.params.sportName
+    const sessions=await Session.findAll({where:{
+      sportName:name
+    }
     })
+    console.log(sessions)
+    res.render("sportsessions.ejs",{sessions})
    })
 
     
 
 app.get("/sports",connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
-  const sports = await Sport.getAllsports();
+  const sports = await Sport.findAll();
   res.render("sport.ejs", {
     sports: sports,
   });
