@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<%= csrfToken %>" />
     <title>
         <%= title %>
     </title>
@@ -15,6 +16,7 @@
             <%- include('header.ejs') %>
             <h6 class="py-4">Signup as a new user</h6>
             <form action="/users" method="post">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <p class="py-2"><a href="/login" class="text-green-600">Already had an account?</a></p>
                 <div class="py-3">
                     <label for="firstName">First Name:</label>
