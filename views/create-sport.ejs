@@ -27,7 +27,7 @@
         <li>
           <%= sport.id %>
           <%= sport.name %>
-          <a href="/newsession?sport=<%= sport.id %>" style="color: blue; text-decoration: underline;">Create New Session</a>
+          <a href="/newsession/<%= sport.id %>/<%=sport.name %>" style="color: blue; text-decoration: underline;">Create New Session</a>
           <a href="/delete-sport?sport=<%= sport.name %>" class="delete-symbol" onclick="return confirm('Are you sure you want to delete this sport?');">&#10006;</a>
         </li>
       <% }) %>
