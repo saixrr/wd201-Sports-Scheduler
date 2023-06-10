@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 'use strict';
 const { Model ,Op} = require('sequelize');
-
+const moment = require("moment");
 module.exports = (sequelize, DataTypes) => {
   class Session extends Model {
     static associate(models) {
@@ -110,14 +110,7 @@ module.exports = (sequelize, DataTypes) => {
           date: {
             [Op.gte]: new Date(),
           },
-          cancelled: false,
         },
-        attributes: [
-          "creatorId",
-          "venue",
-          "date",
-          "sportId",
-        ],
       });
       return sessions.map((item) => item.dataValues);
     }
@@ -133,13 +126,6 @@ module.exports = (sequelize, DataTypes) => {
           },
           cancel: true,
         },
-        attributes: [
-          "id",
-          "location",
-          "date",
-          "sportId",
-          "",
-        ],
       });
       return sessions.map((item) => item.dataValues);
     }
@@ -166,58 +152,28 @@ module.exports = (sequelize, DataTypes) => {
       return oldSession.map((item) => item.dataValues);
     }
 
-    static async getlatestSessions(sportId) {
-      const latestSession = await this.findAll({
+    static async getlatestSessions(name) {
+      const latestSessions = await this.findAll({
         where: {
-          date: {
-            [Op.gt]: moment().toDate(),
-          },
-          sportId: sportId,
+          [Op.or]: [
+            {
+              date: {
+                [Op.gt]: moment().format("YYYY-MM-DD"),
+              },
+            },
+            {
+              date: moment().format("YYYY-MM-DD"),
+              time: {
+                [Op.gte]: moment().format("HH:mm"),
+              },
+            },
+          ],
+          sportName: name,
         },
-        attributes: [
-          "id",
-          "location",
-          "date",
-          "remaining",
-          "membersList",
-          "sportId",
-          "userId",
-          "cancel",
-        ],
       });
-      return latestSession.map((item) => item.dataValues);
+      return latestSessions.map((item) => item.dataValues);
     }
-    static async joinSession(email, sessionId) {
-      const session = await this.getSessionById(sessionId);
-      session.membersList.push(email);
-      return this.update(
-        {
-          membersList: session.membersList,
-          remaining: session.remaining - 1,
-        },
-        {
-          where: {
-            id: sessionId,
-          },
-        }
-      );
-    }
-
-    static async leaveSession(index, sessionId) {
-      const session = await this.getSessionById(sessionId);
-      session.membersList.splice(index, 1);
-      return this.update(
-        {
-          membersList: session.membersList,
-          remaining: session.remaining + 1,
-        },
-        {
-          where: {
-            id: sessionId,
-          },
-        }
-      );
-    }
+    
 
     static async cancelSession(id, reason) {
       const session = await this.findOne({
@@ -230,7 +186,7 @@ module.exports = (sequelize, DataTypes) => {
       }
       return this.update(
         {
-          cancel: true,
+          cancelled: true,
           reason: reason,
         },
         {
@@ -240,7 +196,51 @@ module.exports = (sequelize, DataTypes) => {
         }
       );
     }
-
+    static async joinSession(email, sessionId) {
+      const session = await this.getSessionById(sessionId);
+      
+      if (session.membersList.includes(email)) {
+        // Email already exists in membersList, display flash message
+        return { success: false, message: 'Email is already joined.' };
+      }
+      
+      // Add the email to the membersList
+      session.membersList.push(email);
+    
+      await this.update(
+        {
+          membersList: session.membersList,
+          remaining: session.remaining - 1,
+        },
+        {
+          where: {
+            id: sessionId,
+          },
+        }
+      );
+    
+      // Return success or any other necessary response
+      return { success: true };
+    }
+    static async leaveSession(email, sessionId) {
+      const session = await this.getSessionById(sessionId);
+      const emailIndex = session.membersList.indexOf(email);
+      if (emailIndex !== -1) {
+        session.membersList.splice(emailIndex, 1);
+        return this.update(
+          {
+            membersList: session.membersList,
+            remaining: session.remaining + 1,
+          },
+          {
+            where: {
+              id: sessionId,
+            },
+          }
+        );
+      }
+    }
+    
   }
   Session.init(
     {
