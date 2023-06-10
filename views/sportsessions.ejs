@@ -58,6 +58,12 @@
             font-weight: bold;
             color: #00aaff;
         }
+
+        .full-slots {
+            font-weight: bold;
+            color: #ff0000;
+        }
+        
     </style>
 </head>
 
@@ -65,8 +71,7 @@
     <div class="container">
         <div class="top-links">
             <a href="/signout" class="text-green-600">Sign-out</a>
-            <a class="text-green-600">Create New Session</a>
-            <a class="text-green-600">Join Session</a>
+            <a href="/newsession/1/<%= name%>" class="text-green-600">Create New Session</a>
         </div>
         <h1>Sessions for this Sport</h1>
         <% if (sessions.length === 0) { %>
@@ -74,6 +79,7 @@
         <% } else { %>
         <% for (let i = 0; i < sessions.length; i++) { %>
         <% const session = sessions[i]; %>
+        <% if (!session.cancelled) { %>
         <h2>
             <%= session.sportName %>
         </h2>
@@ -115,12 +121,25 @@
                             <%= emptySlots %> empty slots
                         </span>
                         <% } else { %>
-                        <span class="empty-slots">No slots available</span>
+                        <span class="full-slots">No slots available</span>
                         <% } %>
+                    </td>
+                    <td>
+                        <% if (emptySlots > 0) { %>
+                        <a href="/sessionplayer/<%= session.id %>" class="text-blue-800">Join Session</a>
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if (message) { %>
+                            <div class="flash-message">
+                              <%= message %>
+                            </div>
+                          <% } %>
                     </td>
                 </tr>
             </tbody>
         </table>
+        <% } %>
         <% } %>
         <% } %>
     </div>
