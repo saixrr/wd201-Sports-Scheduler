@@ -110,7 +110,7 @@ app.get('/', (req, res) => {
   app.get("/create-session", connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
     try {
       const userId = req.user.id;
-      const sports = await Sport.findAll({ where: { userId } });
+      const sports = await Sport.findAll();
       res.render('create-sport.ejs', { sports,successMessage: req.flash('successMessage'), errorMessage: req.flash('errorMessage') ,csrfToken: req.csrfToken(), });
     } catch (error) {
       console.log(error);
