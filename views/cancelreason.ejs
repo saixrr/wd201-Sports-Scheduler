@@ -1,0 +1,58 @@
+<!-- cancelreason.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="csrf-token" content="<%= csrfToken %>" />
+  <title>Cancel Session</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #34d399;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Cancel Session</h1>
+    <form action="/cancelsession/<%= sessionId %>/confirm" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label for="reason">Reason for Cancellation:</label>
+      <input type="text" id="reason" name="reason" placeholder="Enter the reason for cancellation" required>
+      <button type="submit">Confirm Cancellation</button>
+    </form>
+  </div>
+</body>
+
+</html>
