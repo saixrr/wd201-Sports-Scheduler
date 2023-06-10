@@ -2,6 +2,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 'use strict';
+const { password } = require('pg/lib/defaults');
 const { Model, where } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
@@ -22,13 +23,13 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static updateuserbyId(userId, userData) {
-      const { firstName, lastName, email } = userData;
+    static updateuserbyId(userId, newfirstName,newlastName,newemail,newpassword) {
       return this.update(
         {
-          firstName: capitalizeFirstLetter(firstName),
-          lastName: capitalizeFirstLetter(lastName),
-          email,
+          firstName: newfirstName,
+          lastName: newlastName,
+          email:newemail,
+          password:newpassword
         },
         {
           where: {
