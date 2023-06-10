@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Reports</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-gray-100">  
+  <div class="container mx-auto px-4 py-8">
+    <a href="/signout" class="text-green-600">Sign-out</a>
+    <h1 class="text-3xl font-bold mb-8">Reports</h1>
+
+    <form id="reportForm" class="mb-4">
+      <label for="startDate" class="block mb-2 text-lg font-medium">Start Date:</label>
+      <input type="date" id="startDate" name="startDate" class="border border-gray-300 text-gray-900 rounded p-2" required>
+
+      <label for="endDate" class="block mb-2 text-lg font-medium">End Date:</label>
+      <input type="date" id="endDate" name="endDate" class="border border-gray-300 text-gray-900 rounded p-2" required>
+
+      <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded font-medium mt-4">Generate Report</button>
+    </form>
+
+    <div id="reportResults" class="mt-8">
+    </div>
+
+    <canvas id="barGraph" width="400" height="200"></canvas>
+
+  </div>
+
+  <script>
+    const reportForm = document.getElementById('reportForm');
+    const reportResults = document.getElementById('reportResults');
+
+    reportForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+
+      // Make an API request to retrieve the report data based on the selected dates
+      fetch(`/api/reports?startDate=${startDate}&endDate=${endDate}`)
+        .then(response => response.json())
+        .then(data => {
+          // Generate the report based on the retrieved data
+          const sessionsCount = data.sessionsCount;
+          const sportsPopularity = data.sportsPopularity;
+
+          let reportHTML = '';
+          reportHTML += `<h2 class="text-2xl font-bold mb-4">No of Sessions played in this time period: ${sessionsCount}</h2>`;
+          reportHTML += '<h2 class="text-2xl font-bold mb-4">Sports Popularity:</h2>';
+          reportHTML += '<ul>';
+          for (const sport in sportsPopularity) {
+            reportHTML += `<li>${sport}: ${sportsPopularity[sport]}</li>`;
+          }
+          reportHTML += '</ul>';
+
+          reportResults.innerHTML = reportHTML;
+
+          // Create a bar graph using Chart.js
+          const ctx = document.getElementById('barGraph').getContext('2d');
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: Object.keys(sportsPopularity),
+              datasets: [{
+                label: 'Popularity',
+                data: Object.values(sportsPopularity),
+                backgroundColor: 'rgba(192, 192, 192, 0.5)',
+              }],
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  precision: 0,
+                },
+              },
+            },
+          });
+        })
+        .catch(error => {
+          console.error('Error retrieving report data:', error);
+          reportResults.innerHTML = '<p>Error retrieving report data. Please try again later.</p>';
+        });
+    });
+  </script>
+</body>
+
+</html>
