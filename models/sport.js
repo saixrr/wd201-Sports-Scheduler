@@ -8,12 +8,18 @@ module.exports = (sequelize, DataTypes) => {
       Sport.belongsTo(models.User, { foreignKey: 'userId' });
     }
 
-    static createNewSport(userId,name) {
+    static async createNewSport(userId, name) {
+      const existingSport = await this.findOne({ where: { name } });
+      if (existingSport) {
+        throw new Error('This sport is already available.');
+      }
+    
       return this.create({
-        userId:userId,
-        name:name
+        userId,
+        name,
       });
     }
+    
 
     static async updatesportbyid(sportId,name){
       return await this.update({
