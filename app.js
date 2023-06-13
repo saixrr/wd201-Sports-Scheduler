@@ -87,6 +87,22 @@ passport.use(new LocalStartegy({
           })
     }) ; 
 
+    const isAdmin = (req, res, next) => {
+      if (req.isAuthenticated()) {
+        if (req.user.admin) {
+          return next();
+        } else {
+          res.locals.messages = req.flash(
+            "info",
+            "You do not have authentication"
+          );
+          res.redirect("/admin");
+        }
+      } else {
+        res.redirect("/sessions");
+      }
+    };
+
 app.get('/', (req, res) => {
     res.render("dashboard.ejs",{csrfToken: req.csrfToken()})
   });
@@ -167,21 +183,6 @@ app.post("/newsession",connectEnsureLogin.ensureLoggedIn(), async (req, res) => 
     res.status(404).send("Error creating session");
   }
 });
-app.get("/session/:sessionid",connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
-  const sessionId = req.params.sessionid;
-  try {
-    const session = await Session.findByPk(sessionId);
-    if (!session) {
-      throw new Error('Session not found');
-    }
-    res.render("session-details.ejs", { session,});
-  } catch (error) {
-    console.log(error);
-    res.status(404).send("Error retrieving session details");
-  }
-});
-
-
   app.post("/users",async(request,response)=>{
     const { firstName, lastName, email, password } = request.body;
     console.log(request.body.firstName)
@@ -223,46 +224,46 @@ app.get("/session/:sessionid",connectEnsureLogin.ensureLoggedIn(), async (req, r
     app.post(
       "/session",
       passport.authenticate("local", {
-        successRedirect: "/sessions",
         failureRedirect: "/login",
         failureFlash: true,
       }),
-      function (req, res, next) {
-        req.flash("error", req.authInfo.message);
+      function (request, response, next) {
+        request.flash("error", request.authInfo.message);
         next();
+      },
+      function (request, response) {
+        console.log(request.user);
+        response.redirect("/sessions");
       }
     );
-    
 
     app.get('/sessions', connectEnsureLogin.ensureLoggedIn(), (req, res) => {
       console.log(req.user.id)
-      res.render('sessions.ejs', { userId: req.user.id, });
+      res.render('sessions.ejs', { userId: req.user.id,errorMessage: req.flash('errorMessage')});
     });
     
-
-
-app.get("/sessions/:sessionid",connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
-  const sessionId = req.params.id;
-  const session = await Session.getSessionById(sessionId);
-  res.render("session-details.ejs", {
-    session: session,
-  });
+    
+app.get("/admin", connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
+  const userId = req.query.userId;
+  const user = await User.findOne({ where: { id: userId } });
+  if (user.admin) {
+    console.log(userId);
+    res.render("admin.ejs");
+  } else {
+    res.locals.messages = req.flash("error", "Sorry!! You are not having access to admin panel.Please proceed as a player");
+    res.redirect("/sessions");
+  }
 });
 
 
-
-    
-    app.get("/admin",connectEnsureLogin.ensureLoggedIn(),(req,res)=>{
-      const userId = req.query.userId;
-      console.log(userId)
-      res.render("admin.ejs",)
-    })
-
    app.get("/sports/:sportName",connectEnsureLogin.ensureLoggedIn(),async (req,res)=>{
     const name=req.params.sportName
+    const userId=req.userId;
+    const user=await User.findOne({where:{id:userId}})
+    const email=user.email
     const sessions=await Session.getlatestSessions(name)
     const message=req.flash('message');
-    res.render("sportsessions.ejs",{sessions,name,message})
+    res.render("sportsessions.ejs",{sessions,name,message,email})
    })
 app.get("/joinedsessions",connectEnsureLogin.ensureLoggedIn(),async(req,res)=>{
   try{
