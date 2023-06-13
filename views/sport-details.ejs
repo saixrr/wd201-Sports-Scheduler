@@ -6,10 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="csrf-token" content="<%= csrfToken %>" />
+  <link rel="stylesheet" href="/css/signup.css" >
   <title>Create a New Session</title>
 </head>
-
 <body class="bg-gray-100">
+  <div class="top-links">
+    <a href="/signout" class="text-green-600">Sign-out</a>
+  </div>
   <div class="container mx-auto px-4 py-8">
 
     <h1 class="text-3xl font-bold mb-8">Create a New Session</h1>
@@ -35,6 +38,7 @@
       </div>
       <div class="mb-4">
         <label for="membersList" class="block mb-2 text-lg font-medium">Players:</label>
+        <input type="text" id="searchPlayer" class="border border-gray-300 text-gray-900 rounded p-2 w-full mb-2" placeholder="Search player...">
         <select id="membersListSelect" class="border border-gray-300 text-gray-900 rounded p-2 w-full" multiple>
           <% for (let i = 0; i < users.length; i++) { %>
           <option value="<%= users[i].email %>"><%= users[i].email %></option>
@@ -48,19 +52,66 @@
       </div>
       <div>
         <button type="submit" class="bg-blue-600 text-white px-5 py-2 rounded font-medium hover:bg-blue-700">Create Session</button>
-        <a href="/cancelsession" class="text-red-600 ml-4 hover:underline">Cancel Session</a>
       </div>
     </form>
 
     <script>
       const membersListSelect = document.getElementById('membersListSelect');
       const membersListInput = document.getElementById('membersList');
+      const dateInput = document.getElementById('date');
+      const timeInput = document.getElementById('time');
+      const currentTime = new Date();
+      const searchPlayerInput = document.getElementById('searchPlayer');
+
+      // Get Indian Standard Time (IST) offset in minutes
+      const ISTOffsetMinutes = 330; // IST is UTC+5:30
+
+      // Calculate Indian date based on current time and offset
+      const currentISTDate = new Date(currentTime.getTime() + ISTOffsetMinutes * 60 * 1000).toISOString().split('T')[0];
+
+      // Set minimum date to today's Indian date
+      dateInput.setAttribute('min', currentISTDate);
+
+      // Validate time input when the date changes
+      dateInput.addEventListener('change', () => {
+        const selectedDate = dateInput.value;
+        const selectedTime = timeInput.value;
+
+        if (selectedDate === currentISTDate) {
+          const currentTimeIST = new Date(currentTime.getTime()).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' });
+          timeInput.setAttribute('min', currentTimeIST);
+          timeInput.value = currentTimeIST;
+
+          if (selectedTime <= currentTimeIST) {
+            timeInput.value = '';
+          }
+        } else {
+          // Clear the min attribute if the selected date is not today
+          timeInput.removeAttribute('min');
+        }
+      });
 
       membersListSelect.addEventListener('change', (event) => {
         const selectedOptions = Array.from(event.target.selectedOptions);
         const selectedEmails = selectedOptions.map((option) => option.value);
         membersListInput.value = selectedEmails.join(',');
       });
+      searchPlayerInput.addEventListener('input', (event) => {
+        const searchQuery = event.target.value.toLowerCase();
+        const options = membersListSelect.options;
+        
+        for (let i = 0; i < options.length; i++) {
+          const email = options[i].value.toLowerCase();
+          const option = options[i];
+
+          if (email.includes(searchQuery)) {
+            option.style.display = '';
+          } else {
+            option.style.display = 'none';
+          }
+        }
+      });
+      
     </script>
   </div>
 </body>
