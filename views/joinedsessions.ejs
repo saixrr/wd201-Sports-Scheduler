@@ -9,12 +9,21 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/signup.css" >
     <style>
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
+        body {
+      background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTus_gWso6gF6nj8_d9LncWXFphmHgbK4Ad4A&usqp=CAU');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      margin: 0; 
+      display: flex; 
+      align-items: center; 
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
         .top-links {
             text-align: right;
             margin-bottom: 20px;
@@ -47,6 +56,7 @@
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ccc;
+            border-right: 1px solid #ccc;
         }
 
         .no-sessions {
@@ -68,6 +78,16 @@
             background-color: #eee;
             color: #999;
         }
+
+        /* Tailwind CSS Classes */
+        .table-dark th {
+            background-color: #1f2937;
+            color: #fff;
+        }
+
+        .table-dark tr:nth-child(even) {
+            background-color: #f3f4f6;
+        }
     </style>
 </head>
 
@@ -86,39 +106,37 @@
         <h2>
             <%= session.sportName %>
         </h2>
-        <table>
+        <table class="border-collapse border border-gray-300 w-full">
             <thead>
                 <tr>
-                    <th>Venue</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Number of Players</th>
-                    <th>Player Names</th>
-                    <th>Available Slots</th>
+                    <th class="py-2 bg-gray-800 text-white">Venue</th>
+                    <th class="py-2 bg-gray-800 text-white">Date</th>
+                    <th class="py-2 bg-gray-800 text-white">Time</th>
+                    <th class="py-2 bg-gray-800 text-white">Number of Players</th>
+                    <th class="py-2 bg-gray-800 text-white">Player Names</th>
+                    <th class="py-2 bg-gray-800 text-white">Available Slots</th>
+                    <th class="py-2 bg-gray-800 text-white">Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr class="<%= session.cancelled ? 'cancelled-session' : '' %>">
-                    <td>
+                    <td class="border-r">
                         <%= session.venue %>
                     </td>
-                    <td>
+                    <td class="border-r">
                         <%= session.date %>
                     </td>
-                    <td>
+                    <td class="border-r">
                         <%= session.time %>
                     </td>
-                    <td>
+                    <td class="border-r">
                         <%= session.count %>
                     </td>
-                    <td>
+                    <td class="border-r">
                         <%= session.membersList %>
                     </td>
-                    <td>
-                        <%= session.count - session.membersList.length %>
-                    </td>
-                    <td>
-                        <% const emptySlots = session.count - session.membersList.length; %>
+                    <td class="border border-gray-300 px-4 py-2">
+                        <% const emptySlots = session.count - (session.membersList.length); %>
                         <% if (emptySlots > 0) { %>
                         <span class="empty-slots">
                             <%= emptySlots %> empty slots
