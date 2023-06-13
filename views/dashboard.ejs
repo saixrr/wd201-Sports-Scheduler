@@ -5,11 +5,37 @@
   <title>Dashboard</title>
   <meta name="csrf-token" content="<%= csrfToken %>" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-image: url('https://media.gettyimages.com/id/502301173/photo/sports-heroes.jpg?s=612x612&w=0&k=20&c=Iski7j6mRgkYSlYF1EwBr9ClnDw2Z9SBVWukzLp9RB0=');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh; /* Ensure the body covers the full viewport height */
+      margin: 0; /* Remove default margin to cover the full page */
+      display: flex; /* Use flexbox for centering content vertically */
+      align-items: center; /* Center content vertically */
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8); /* Add a semi-transparent background for better readability */
+    }
+  </style>
 </head>
 <body>
-  <h1>SPORTS SCHEDULER</h1>
-  <p class="py-2">Welcome to the sports-scheduler</p>
-  <p class="py-2">New here?<a href="/signup" class="text-green-600">Sign-up now</a></p>
-  <p class="py-2">Already have an account?<a href="/login" class="text-green-600">Sign-in</a></p>
+  <div class="container">
+    <div class="grid grid-cols-6">
+      <div class="col-start-3 col-span-2">
+        <h1>SPORTS SCHEDULER</h1>
+        <p class="py-2">Welcome to the sports-scheduler</p>
+        <p class="py-2">New here?<a href="/signup" class="text-green-600">Sign-up now</a></p>
+        <p class="py-2">Already have an account?<a href="/login" class="text-green-600">Sign-in</a></p>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
