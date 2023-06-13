@@ -5,6 +5,18 @@
   <link rel="stylesheet" href="/css/style.css" />
   <meta name="csrf-token" content="<%= csrfToken %>" />
   <style>
+    .top-links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 10px;
+  }
+
+  .top-links a {
+    margin-left: 10px;
+    color: green;
+  }
     .delete-symbol {
       color: red;
       cursor: pointer;
@@ -25,8 +37,10 @@
   </style>
 </head>
 <body>
+  <div class="top-links">
+    <a href="/signout" class="text-green-600">Sign-out</a>
+  </div>
   <h1>Create Sport</h1>
-  <a href="/signout" class="text-green-600">Sign-out</a>
   <form action="/create-session" method="POST">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     <label for="sportName">Sport Name:</label>
