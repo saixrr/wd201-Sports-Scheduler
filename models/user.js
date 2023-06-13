@@ -39,19 +39,6 @@ module.exports = (sequelize, DataTypes) => {
       );
     }
 
-    static async updatePasswordById(userId, newPassword) {
-      try {
-        const user = await User.findByPk(userId);
-        if (!user) {
-          throw new Error('User not found');
-        }
-        user.password = newPassword;
-        const updatedUser = await user.save();
-        return updatedUser;
-      } catch (error) {
-        throw error;
-      }
-    }
 
     static async getUserById(userId) {
       try {
