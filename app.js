@@ -203,7 +203,6 @@ app.post("/newsession",connectEnsureLogin.ensureLoggedIn(), async (req, res) => 
       console.log(hashedPwd)
       try{
         const user=await User.create({
-          admin:true,
           firstName:request.body.firstName,
           lastName:request.body.lastName,
           email:request.body.email,
