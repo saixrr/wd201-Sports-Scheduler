@@ -7,6 +7,21 @@
     <link rel="stylesheet" href="/css/style.css" />
 </head>
 <style>
+  body {
+      background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcXMdb4r14hBaiEQDs5OrArKhJQ4oj5L3QLA&usqp=CAU');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      margin: 0; 
+      display: flex; 
+      align-items: center; 
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
     .top-links {
     display: flex;
     justify-content: flex-end;
@@ -21,6 +36,7 @@
   }
 </style>
 <body>
+  <div class="container">
     <div class="top-links">
         <a href="/signout" class="text-green-600">Sign-out</a>
       </div>
@@ -29,5 +45,6 @@
         <li><a href="/create-session">Create a Sport</a></li>
         <li><a href="/reports">View Reports</a></li>
     </ul>
+    </div>
 </body>
 </html>
