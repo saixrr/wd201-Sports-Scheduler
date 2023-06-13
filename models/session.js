@@ -130,27 +130,6 @@ module.exports = (sequelize, DataTypes) => {
       return sessions.map((item) => item.dataValues);
     }
 
-    static async getpastSessions(sportId) {
-      const pastSessions = await this.findAll({
-        where: {
-          date: {
-            [Op.lt]: moment().toDate(),
-          },
-          sportId: sportId,
-        },
-        attributes: [
-          "id",
-          "location",
-          "date",
-          "remaining",
-          "membersList",
-          "sportId",
-          "userId",
-          "cancel",
-        ],
-      });
-      return oldSession.map((item) => item.dataValues);
-    }
 
     static async getlatestSessions(name) {
       const latestSessions = await this.findAll({
@@ -200,11 +179,8 @@ module.exports = (sequelize, DataTypes) => {
       const session = await this.getSessionById(sessionId);
       
       if (session.membersList.includes(email)) {
-        // Email already exists in membersList, display flash message
         return { success: false, message: 'Email is already joined.' };
       }
-      
-      // Add the email to the membersList
       session.membersList.push(email);
     
       await this.update(
@@ -219,7 +195,6 @@ module.exports = (sequelize, DataTypes) => {
         }
       );
     
-      // Return success or any other necessary response
       return { success: true };
     }
     static async leaveSession(email, sessionId) {
