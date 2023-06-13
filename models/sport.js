@@ -20,19 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
     
-
-    static async updatesportbyid(sportId,name){
-      return await this.update({
-        sport:name,
-      },
-      {
-        where:{
-          id:sportId,
-        },
-      }
-      );
-    }
-
     static async getAllsports(){
       const sports= await this.findAll({
         attributes:["id","name"],
