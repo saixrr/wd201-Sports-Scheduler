@@ -7,27 +7,39 @@
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <style>
-  .top-links {
-            text-align: right;
-            margin-bottom: 30px;
-            padding: 10px;
-        }
 
-        .top-links a {
-            margin-left: 10px;
-            color: #337ab7;
-        }
+  .top-links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 10px;
+  }
+
+  .top-links a {
+    margin-left: 10px;
+    color: #337ab7;
+  }
 </style>
 <body>
   <div class="top-links">
     <a href="/edit-profile" class="text-blue-600">Edit Profile</a>
+    <a href="/signout" class="text-green-600">Sign-out</a>
   </div>
   <h1>Welcome</h1>
-  <a href="/signout" class="text-green-600">Sign-out</a>
-  <p>Create or join a session:</p>
+  <div class="notify">
+    <div class="error" style="color: red;">
+        <% if(messages && messages.error && messages.error.length > 0)  { %>
+            <% for(var i = 0; i < messages.error.length; i++) { %>
+                <p> <%= messages.error[i] %></p>
+            <% } %>
+        <% } %>
+    </div>
+  </div>
+  <p>Sign in as a:</p>
   <ul>
     <li><a href="/admin?userId=<%= userId %>">Admin</a></li>
-    <li><a href="/sports">player</a></li>
+    <li><a href="/sports">Player</a></li>
   </ul>
 </body>
 </html>
