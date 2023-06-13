@@ -298,8 +298,10 @@ app.get('/leavesession/:sessionId',connectEnsureLogin.ensureLoggedIn(),async(req
 
 app.get("/sports",connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
   const sports = await Sport.findAll();
+  const userId=req.userId;
+  const user=await User.findOne({where:{id:userId}})
   res.render("sport.ejs", {
-    sports: sports,
+    sports: sports,user
   });
 });
 app.get("/usersessions",connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
