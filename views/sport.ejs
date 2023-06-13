@@ -3,48 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
-    <title>My Sports SCHEDULER</title>
+    <title>My Sports Scheduler</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <style>
-    .top-links {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 30px;
-    padding: 10px;
-  }
+    body {
+        background-image: url('https://blog.stackfindover.com/wp-content/uploads/2021/10/SVG-Waves-Animation.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
 
-  .top-links a {
-    margin-left: 10px;
-    color: green;
-  }
+    .container {
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .top-links {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 30px;
+        padding: 10px;
+    }
+
+    .top-links a {
+        margin-left: 10px;
+        color: green;
+    }
 </style>
 <body>
-    <div class="top-links">
-        <a href="/signout" class="text-green-600">Sign-out</a>
-    </div>
-<main class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-    <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Available Sports</h1>
-    </div>
-    <div class="flex justify-end mr-4 mt-2">
-        <a href="/usersessions" class="text-blue-600 font-medium">My created Sessions</a>
-        <a href="/joinedsessions" class="text-blue-600 font-medium ml-4">My joined Sessions</a>
-    </div>
+    <div class="container">
+        <div class="top-links">
+            <% if (user && user.admin) { %>
+                <a href="/create-session" class="text-blue-600 font-medium">Create Sport</a>
+                <a href="/reports" class="text-blue-600 font-medium ml-4">Reports</a>
+            <% } %>
+            <a href="/signout" class="text-green-600 font-medium">Sign-out</a>
+        </div>
+        <main class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Available Sports</h1>
+            </div>
+            <div class="flex justify-end mr-4 mt-2">
+                <a href="/usersessions" class="text-blue-600 font-medium">My created Sessions</a>
+                <a href="/joinedsessions" class="text-blue-600 font-medium ml-4">My joined Sessions</a>
+            </div>
 
-
-    <div class="flex flex-col items-center mr-6 mt-4">
-        <% if(sports.length === 0){ %>
-            <h1 class="text-2xl font-bold text-gray-900">No sports found</h1>
-        <% }else{ %>
-            <% const uniqueSports = Array.from(new Set(sports.map(sport => sport.name))); %>
-            <% for(let i = 0;i < uniqueSports.length;i++){ %>
-                <a href="/sports/<%= uniqueSports[i] %>" class="w-40 h-8 bg-white rounded-lg shadow-md mb-6 flex items-center justify-center transition-transform hover:-translate-y-1 hover:shadow-lg cursor-pointer">
-                    <h2 class="text-lg font-Semi-bold text-blue-800"><%= uniqueSports[i] %></h2>
-                </a>
-        <% }} %>
+            <div class="flex flex-col items-center mr-6 mt-4">
+                <% if(sports.length === 0){ %>
+                    <h1 class="text-2xl font-bold text-gray-900">No sports found</h1>
+                <% }else{ %>
+                    <% const uniqueSports = Array.from(new Set(sports.map(sport => sport.name))); %>
+                    <% for(let i = 0;i < uniqueSports.length;i++){ %>
+                        <a href="/sports/<%= uniqueSports[i] %>" class="w-40 h-8 bg-white rounded-lg shadow-md mb-6 flex items-center justify-center transition-transform hover:-translate-y-1 hover:shadow-lg cursor-pointer">
+                            <h2 class="text-lg font-semibold text-blue-800"><%= uniqueSports[i] %></h2>
+                        </a>
+                    <% }} %>
+            </div>
+        </main>
     </div>
-</main>
 </body>
 </html>
