@@ -203,25 +203,12 @@ app.post("/newsession",connectEnsureLogin.ensureLoggedIn(), async (req, res) => 
       console.log(hashedPwd)
       try{
         const user=await User.create({
+          admin:true,
           firstName:request.body.firstName,
           lastName:request.body.lastName,
           email:request.body.email,
           password:hashedPwd
         });
-        const user1 = await User.create({
-          admin:true,
-          firstName:"admin1",
-          lastName:"test",
-          email:"admintest1@gmail.com",
-          password:await bcrypt.hash("1234",saltRounds)
-        })
-        const user2 = await User.create({
-          admin:true,
-          firstName:"admin2",
-          lastName:"test",
-          email:"admintest2@gmail.com",
-          password:await bcrypt.hash("12345",saltRounds)
-        })
         request.login(user,(err)=>{
           if(err) {
             console.log(err)
@@ -238,18 +225,16 @@ app.post("/newsession",connectEnsureLogin.ensureLoggedIn(), async (req, res) => 
     app.post(
       "/session",
       passport.authenticate("local", {
+        successRedirect: "/sessions",
         failureRedirect: "/login",
         failureFlash: true,
       }),
-      function (request, response, next) {
-        request.flash("error", request.authInfo.message);
+      function (req, res, next) {
+        req.flash("error", req.authInfo.message);
         next();
-      },
-      function (request, response) {
-        console.log(request.user);
-        response.redirect("/sessions");
       }
     );
+    
 
     app.get('/sessions', connectEnsureLogin.ensureLoggedIn(), (req, res) => {
       console.log(req.user.id)
