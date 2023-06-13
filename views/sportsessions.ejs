@@ -3,146 +3,141 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sports-Scheduler</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sports-Scheduler</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
-        .top-links {
-            text-align: right;
-            margin-bottom: 20px;
-        }
+    .top-links {
+      text-align: right;
+      margin-bottom: 20px;
+    }
 
-        .top-links a {
-            margin-left: 10px;
-            color: #34d399;
-        }
+    .top-links a {
+      margin-left: 10px;
+      color: #34d399;
+    }
 
-        h1 {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-        }
+    h1 {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
 
-        h2 {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
+    h2 {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
 
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ccc;
-        }
+    th,
+    td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+    }
 
-        .no-sessions {
-            font-size: 18px;
-            color: #999;
-            margin-bottom: 20px;
-        }
+    .no-sessions {
+      font-size: 18px;
+      color: #999;
+      margin-bottom: 20px;
+    }
 
-        .empty-slots {
-            font-weight: bold;
-            color: #00aaff;
-        }
+    .empty-slots {
+      font-weight: bold;
+      color: #00aaff;
+    }
 
-        .full-slots {
-            font-weight: bold;
-            color: #ff0000;
-        }
-        
-    </style>
+    .full-slots {
+      font-weight: bold;
+      color: #ff0000;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="top-links">
-            <a href="/signout" class="text-green-600">Sign-out</a>
-            <a href="/newsession/1/<%= name%>" class="text-green-600">Create New Session</a>
-        </div>
-        <h1>Sessions for this Sport</h1>
-        <% if (sessions.length === 0) { %>
-        <p class="no-sessions">No sessions available.</p>
-        <% } else { %>
-        <% for (let i = 0; i < sessions.length; i++) { %>
-        <% const session = sessions[i]; %>
-        <% if (!session.cancelled) { %>
-        <h2>
-            <%= session.sportName %>
-        </h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Venue</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Number of Players</th>
-                    <th>Player Names</th>
-                    <th>Available Slots</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <%= session.venue %>
-                    </td>
-                    <td>
-                        <%= session.date %>
-                    </td>
-                    <td>
-                        <%= session.time %>
-                    </td>
-                    <td>
-                        <%= session.count %>
-                    </td>
-                    <td>
-                        <%= session.membersList %>
-                    </td>
-                    <td>
-                        <%= session.count - session.membersList.length %>
-                    </td>
-                    <td>
-                        <% const emptySlots = session.count - (session.membersList.length); %>
-                        <% if (emptySlots > 0) { %>
-                        <span class="empty-slots">
-                            <%= emptySlots %> empty slots
-                        </span>
-                        <% } else { %>
-                        <span class="full-slots">No slots available</span>
-                        <% } %>
-                    </td>
-                    <td>
-                        <% if (emptySlots > 0) { %>
-                        <a href="/sessionplayer/<%= session.id %>" class="text-blue-800">Join Session</a>
-                        <% } %>
-                    </td>
-                    <td>
-                        <% if (message) { %>
-                            <div class="flash-message">
-                              <%= message %>
-                            </div>
-                          <% } %>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <% } %>
-        <% } %>
-        <% } %>
+  <div class="container">
+    <div class="top-links">
+      <a href="/signout" class="text-green-600">Sign-out</a>
+      <a href="/newsession/1/<%= name%>" class="text-green-600">Create New Session</a>
     </div>
+    <h1>Sessions for this Sport</h1>
+    <% if (sessions.length === 0) { %>
+    <p class="no-sessions">No sessions available.</p>
+    <% } else { %>
+    <% for (let i = 0; i < sessions.length; i++) { %>
+    <% const session = sessions[i]; %>
+    <% const isUserInSession = session.membersList.includes(email); %>
+    <% if (!session.cancelled) { %>
+    <h2>
+      <%= session.sportName %>
+    </h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Venue</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Number of Players</th>
+          <th>Player Names</th>
+          <th>Available Slots</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <%= session.venue %>
+          </td>
+          <td>
+            <%= session.date %>
+          </td>
+          <td>
+            <%= session.time %>
+          </td>
+          <td>
+            <%= session.count %>
+          </td>
+          <td>
+            <%= session.membersList %>
+          </td>
+          <td>
+            <%= session.count - session.membersList.length %>
+          </td>
+          <td>
+            <% const emptySlots = session.count - session.membersList.length; %>
+            <% if (isUserInSession) { %>
+            <p class="text-green-600">You have already joined this session</p>
+            <% } else if (emptySlots > 0) { %>
+            <a href="/sessionplayer/<%= session.id %>" class="text-blue-800">Join Session</a>
+            <% } %>
+          </td>
+        </tr>
+        <% if (isUserInSession) { %>
+        <tr>
+          <td colspan="7">
+            <p>You have already joined this session.</p>
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <% } %>
+    <% } %>
+    <% } %>
+  </div>
 </body>
 
 </html>
