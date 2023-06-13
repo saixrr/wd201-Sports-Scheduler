@@ -7,11 +7,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <title>Reports</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="/css/signup.css" >
 </head>
-
-<body class="bg-gray-100">  
-  <div class="container mx-auto px-4 py-8">
+<body class="bg-gray-100">
+  <div class="top-links">
     <a href="/signout" class="text-green-600">Sign-out</a>
+  </div>  
+  <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-8">Reports</h1>
 
     <form id="reportForm" class="mb-4">
@@ -34,12 +36,20 @@
   <script>
     const reportForm = document.getElementById('reportForm');
     const reportResults = document.getElementById('reportResults');
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+
+    startDateInput.addEventListener('change', () => {
+      const startDateValue = startDateInput.value;
+      endDateInput.min = startDateValue;
+      endDateInput.value = '';
+    });
 
     reportForm.addEventListener('submit', (event) => {
       event.preventDefault();
 
-      const startDate = document.getElementById('startDate').value;
-      const endDate = document.getElementById('endDate').value;
+      const startDate = startDateInput.value;
+      const endDate = endDateInput.value;
 
       // Make an API request to retrieve the report data based on the selected dates
       fetch(`/api/reports?startDate=${startDate}&endDate=${endDate}`)
