@@ -6,9 +6,25 @@
     <title>Admin Panel</title>
     <link rel="stylesheet" href="/css/style.css" />
 </head>
+<style>
+    .top-links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 10px;
+  }
+
+  .top-links a {
+    margin-left: 10px;
+    color: green;
+  }
+</style>
 <body>
+    <div class="top-links">
+        <a href="/signout" class="text-green-600">Sign-out</a>
+      </div>
     <h1>Welcome to the Admin Panel</h1>
-    <a href="/signout" class="text-green-600">Sign-out</a>
     <ul>
         <li><a href="/create-session">Create a Sport</a></li>
         <li><a href="/reports">View Reports</a></li>
