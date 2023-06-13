@@ -309,7 +309,7 @@ app.get("/usersessions",connectEnsureLogin.ensureLoggedIn(), async (req, res) =>
   const sessions = await Session.findAll({where:{creatorId:userId}});
   res.render("usersessions.ejs", {sessions});
 });
-app.get('/cancelsession/:sessionId', async (req, res) => {
+app.get('/cancelsession/:sessionId',connectEnsureLogin.ensureLoggedIn(), async (req, res) => {
   const sessionId=req.params.sessionId
   try {
     res.render('cancelreason.ejs',{sessionId,csrfToken:req.csrfToken()});
@@ -451,7 +451,10 @@ app.post('/edit-profile', connectEnsureLogin.ensureLoggedIn(), async (req, res) 
     res.locals.messages = req.flash("error", error.message);
     res.redirect('/edit-profile');
   }
+
+  
 });
+
 
 
 
