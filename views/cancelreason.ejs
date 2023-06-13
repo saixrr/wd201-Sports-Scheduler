@@ -45,6 +45,7 @@
 
 <body>
   <div class="container">
+    <a href="/sports" class="text-green-600">Available Sports</a>
     <h1>Cancel Session</h1>
     <form action="/cancelsession/<%= sessionId %>/confirm" method="POST">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
