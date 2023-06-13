@@ -8,12 +8,21 @@
   <title>Sports-Scheduler</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
   <style>
+      body {
+      background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTus_gWso6gF6nj8_d9LncWXFphmHgbK4Ad4A&usqp=CAU');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      margin: 0; 
+      display: flex; 
+      align-items: center; 
+    }
     .container {
       max-width: 800px;
       margin: 0 auto;
       padding: 20px;
     }
-
     .top-links {
       text-align: right;
       margin-bottom: 20px;
@@ -72,6 +81,7 @@
     <div class="top-links">
       <a href="/signout" class="text-green-600">Sign-out</a>
       <a href="/newsession/1/<%= name%>" class="text-green-600">Create New Session</a>
+      <a href="/sports" class="text-green-600">Available Sports</a>
     </div>
     <h1>Sessions for this Sport</h1>
     <% if (sessions.length === 0) { %>
@@ -84,17 +94,17 @@
     <h2>
       <%= session.sportName %>
     </h2>
-    <table>
+    <table class="border-collapse border border-gray-300 w-full">
       <thead>
-        <tr>
-          <th>Venue</th>
-          <th>Date</th>
-          <th>Time</th>
-          <th>Number of Players</th>
-          <th>Player Names</th>
-          <th>Available Slots</th>
-          <th></th>
-        </tr>
+          <tr>
+              <th class="py-2 bg-gray-800 text-white">Venue</th>
+              <th class="py-2 bg-gray-800 text-white">Date</th>
+              <th class="py-2 bg-gray-800 text-white">Time</th>
+              <th class="py-2 bg-gray-800 text-white">Number of Players</th>
+              <th class="py-2 bg-gray-800 text-white">Player Names</th>
+              <th class="py-2 bg-gray-800 text-white">Available Slots</th>
+              <th class="py-2 bg-gray-800 text-white">Action</th>
+          </tr>
       </thead>
       <tbody>
         <tr>
