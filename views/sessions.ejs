@@ -7,7 +7,24 @@
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <style>
-
+   body {
+      background-image: url('https://onaircode.com/wp-content/uploads/2019/09/background-wave-1024x575.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh; 
+      margin: 0; 
+      display: flex; 
+      align-items: center; 
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8); /* Add a semi-transparent background for better readability */
+    }
   .top-links {
     display: flex;
     justify-content: flex-end;
@@ -22,6 +39,7 @@
   }
 </style>
 <body>
+  <div class="container">
   <div class="top-links">
     <a href="/edit-profile" class="text-blue-600">Edit Profile</a>
     <a href="/signout" class="text-green-600">Sign-out</a>
@@ -36,10 +54,11 @@
         <% } %>
     </div>
   </div>
-  <p>Sign in as a:</p>
+  <p>Sigin in as a?:</p>
   <ul>
     <li><a href="/admin?userId=<%= userId %>">Admin</a></li>
     <li><a href="/sports">Player</a></li>
   </ul>
+  </div>
 </body>
 </html>
