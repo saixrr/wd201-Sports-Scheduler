@@ -6,9 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
   <meta name="csrf-token" content="<%= csrfToken %>" />
-  <link rel="stylesheet" href="/css/signup.css" >
+  <link rel="stylesheet" href="/css/signup.css">
   <title>Create a New Session</title>
 </head>
+
 <body class="bg-gray-100">
   <div class="top-links">
     <a href="/signout" class="text-green-600">Sign-out</a>
@@ -63,6 +64,8 @@
       const timeInput = document.getElementById('time');
       const currentTime = new Date();
       const searchPlayerInput = document.getElementById('searchPlayer');
+      const playerCountInput = document.getElementById('playerCount');
+      const form = document.querySelector('form');
 
       // Get Indian Standard Time (IST) offset in minutes
       const ISTOffsetMinutes = 330; // IST is UTC+5:30
@@ -97,10 +100,11 @@
         const selectedEmails = selectedOptions.map((option) => option.value);
         membersListInput.value = selectedEmails.join(',');
       });
+
       searchPlayerInput.addEventListener('input', (event) => {
         const searchQuery = event.target.value.toLowerCase();
         const options = membersListSelect.options;
-        
+
         for (let i = 0; i < options.length; i++) {
           const email = options[i].value.toLowerCase();
           const option = options[i];
@@ -112,7 +116,17 @@
           }
         }
       });
-      
+
+      form.addEventListener('submit', (event) => {
+        const selectedOptions = Array.from(membersListSelect.selectedOptions);
+        const selectedEmails = selectedOptions.map((option) => option.value);
+        const playerCount = parseInt(playerCountInput.value, 10);
+
+        if (selectedEmails.length > playerCount) {
+          event.preventDefault(); // Prevent form submission
+          alert('The number of selected players exceeds the specified player count. Please adjust your selection.');
+        }
+      });
     </script>
   </div>
 </body>
