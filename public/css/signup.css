@@ -1,0 +1,12 @@
+.top-links {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 10px;
+  }
+
+  .top-links a {
+    margin-left: 10px;
+    color: green;
+  }
